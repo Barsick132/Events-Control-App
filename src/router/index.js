@@ -1,22 +1,44 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Events from '@/views/Events/Events'
+import EventsContent from '@/views/Events/EventsContent'
+import EventsContentUpdate from '@/views/Events/EventsContentUpdate'
+import Notfound from '@/views/NotFound'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    name: 'root',
+    redirect: {name: 'events'}
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/events',
+    name: 'events',
+    component: Events,
+    props: true,
+    children: [
+      {
+        path: ':id',
+        name: 'events.content',
+        component: EventsContent,
+        props: true,
+        children: [
+          {
+            path: 'update',
+            name: 'events.content.update',
+            component: EventsContentUpdate,
+            props: true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    path: '*',
+    name: 'notFound',
+    component: Notfound
   }
 ]
 
